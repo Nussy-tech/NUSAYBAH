@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Registration | CodeLokal</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+gold: "#FFD700",
+dark: "#0A0A0A",
+silver: "#94A3B8"
+}
+}
+}
+}
+</script>
+
+</head>
+
+<body class="bg-dark text-white min-h-screen flex items-center justify-center">
+
+<div class="w-full max-w-xl bg-white/5 border border-white/10 p-10 rounded-3xl">
+
+<h1 class="text-3xl font-bold text-center mb-6">
+Student Registration
+</h1>
+
+<p class="text-silver text-center mb-8">
+Enter your details before starting the learning experiment
+</p>
+
+<form onsubmit="saveStudent(event)" class="space-y-5">
+
+<input id="name" type="text" placeholder="Full Name"
+class="w-full p-3 rounded-xl bg-black/40 border border-white/10">
+
+<input id="school" type="text" placeholder="School Name"
+class="w-full p-3 rounded-xl bg-black/40 border border-white/10">
+
+<button type="submit"
+class="w-full bg-gold text-black font-bold py-3 rounded-xl hover:bg-white transition">
+Start Experiment
+</button>
+
+</form>
+
+</div>
+
+<script>
+
+function saveStudent(e){
+e.preventDefault();
+
+const name = document.getElementById("name").value;
+const school = document.getElementById("school").value;
+
+if(!name || !school){
+alert("Please fill all fields");
+return;
+}
+
+const student = {
+name,
+school,
+id: Date.now()
+};
+
+localStorage.setItem("student", JSON.stringify(student));
+
+// go to learning method page
+window.location.href = "choose-learning.html";
+}
+
+</script>
+
+</body>
+</html>

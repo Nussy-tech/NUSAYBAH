@@ -1,0 +1,26 @@
+<!-- Replace 'YOUR_FORMSPREE_ID' with the unique code from your Formspree dashboard -->
+<form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="bg-white/5 p-8 rounded-2xl border border-white/10">
+  
+  <h3 class="text-xl font-bold text-white mb-4">Post-Learning Questionnaire</h3>
+  
+  <div class="mb-4">
+    <label class="block text-sm mb-1">Your Name</label>
+    <input type="text" name="name" required class="w-full bg-dark p-3 rounded border border-white/10 focus:border-gold outline-none"/>
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-sm mb-1">Did the analogies help you understand the concept better?</label>
+    <select name="rating" class="w-full bg-dark p-3 rounded border border-white/10 focus:border-gold outline-none">
+      <option>Yes, very much</option>
+      <option>A little bit</option>
+      <option>Not really</option>
+    </select>
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-sm mb-1">Which local analogy did you find most helpful?</label>
+    <textarea name="feedback" class="w-full bg-dark p-3 rounded border border-white/10 h-24 focus:border-gold outline-none"></textarea>
+  </div>
+
+  <button type="submit" class="w-full bg-gold text-black font-bold py-3 rounded hover:bg-white transition">Submit Response</button>
+</form>

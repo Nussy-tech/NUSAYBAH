@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz | CodeLokal</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+gold: "#FFD700",
+dark: "#0A0A0A",
+silver: "#94A3B8"
+}
+}
+}
+}
+</script>
+</head>
+
+<body class="bg-dark text-white min-h-screen">
+
+<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10">
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<a href="index.html" class="font-bold text-xl">CODE<span class="text-gold">LOKAL</span></a>
+</div>
+</nav>
+
+<section class="max-w-4xl mx-auto px-6 py-10">
+
+<h2 class="text-4xl font-bold text-center mb-2">Computer Studies Quiz</h2>
+
+<div class="text-center mb-6 text-gold font-bold">
+Time Left: <span id="timer">2:00</span>
+</div>
+
+<div id="studentBox" class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10"></div>
+
+<form id="quizForm" class="space-y-6"></form>
+
+<div class="text-center mt-8">
+<button id="submitBtn" onclick="submitQuiz()"
+class="bg-gold text-black px-8 py-4 rounded-full font-bold">
+Submit Quiz
+</button>
+</div>
+
+<div id="results" class="hidden mt-10 p-6 bg-white/5 rounded-xl border border-white/10"></div>
+
+</section>
+
+<script>
+
+const student = JSON.parse(localStorage.getItem("student"));
+
+if(!student){
+alert("Please register first");
+window.location.href = "index.html";
+}
+
+document.getElementById("studentBox").innerHTML = `
+<p><b>Name:</b> ${student.name}</p>
+<p><b>School:</b> ${student.school}</p>
+<p><b>Method:</b> ${student.method}</p>
+`;
+
+let questions = [
+{q:"What is a variable?", options:["Storage","Virus","Screen","Mouse"], answer:0},
+{q:"CPU stands for?", options:["Central Processing Unit","Control Program","Computer Power","None"], answer:0},
+{q:"Algorithm is?", options:["Steps","Virus","Game","Hardware"], answer:0},
+{q:"Flowchart is?", options:["Diagram","Code","Mouse","Screen"], answer:0},
+{q:"RAM is?", options:["Memory","Printer","Disk","CPU"], answer:0}
+];
+
+questions.forEach((q,i)=>{
+const div = document.createElement("div");
+div.className="p-4 bg-white/5 rounded-xl border border-white/10";
+div.innerHTML = `<p class="font-bold">${i+1}. ${q.q}</p>`+
+q.options.map((o,j)=>
+`<label class="block mt-2"><input type="radio" name="q${i}" value="${j}"> ${o}</label>`
+).join("");
+document.getElementById("quizForm").appendChild(div);
+});
+
+let time = 120;
+
+setInterval(()=>{
+let m = Math.floor(time/60);
+let s = time%60;
+document.getElementById("timer").innerText = `${m}:${s<10?"0":""}${s}`;
+time--;
+if(time<0) submitQuiz();
+},1000);
+
+function submitQuiz(){
+
+if(window.submitted) return;
+window.submitted = true;
+
+document.getElementById("submitBtn").disabled = true;
+
+let score = 0;
+
+questions.forEach((q,i)=>{
+let selected = document.querySelector(`input[name="q${i}"]:checked`);
+if(selected && parseInt(selected.value) === q.answer){
+score++;
+}
+});
+
+let stats = JSON.parse(localStorage.getItem("quizStats")) || [];
+
+stats.push({
+name: student.name,
+school: student.school,
+method: student.method,
+score: score,
+time: new Date().toLocaleString()
+});
+
+localStorage.setItem("quizStats", JSON.stringify(stats));
+
+document.getElementById("results").classList.remove("hidden");
+document.getElementById("results").innerHTML =
+`<h3 class="text-2xl font-bold">Score: ${score}/${questions.length}</h3>
+<a href="questionnaire.html" class="text-gold mt-4 inline-block">Continue →</a>`;
+}
+
+</script>
+
+</body>
+</html>

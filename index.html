@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CodeLokal | Localized Computing Education</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+gold: "#FFD700",
+dark: "#0A0A0A",
+silver: "#94A3B8"
+}
+}
+}
+}
+</script>
+
+</head>
+
+<body class="bg-dark text-white">
+
+<!-- NAVBAR -->
+
+<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10">
+
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+<a href="#">
+<h1 class="text-2xl font-extrabold">
+CODE<span class="text-gold">LOKAL</span>
+</h1>
+</a>
+
+<div class="hidden md:flex gap-8">
+    <a href="#about" class="hover:text-gold transition">About</a>
+    <a href="#how" class="hover:text-gold transition">How It Works</a>
+    <a href="#goal" class="hover:text-gold transition">Research Goal</a>
+    <a href="#register" class="hover:text-gold transition">Register</a>
+
+    <button
+    type="button"
+    onclick="openAdmin()"
+    class="hover:text-gold transition">
+    Admin
+</button>
+</div>
+
+
+<a href="#register"
+class="bg-gold text-black px-5 py-2 rounded-full font-bold hover:bg-white transition">
+Start Learning </a>
+
+</div>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="max-w-6xl mx-auto px-6 py-24 text-center">
+
+<h2 class="text-5xl md:text-7xl font-extrabold leading-tight">
+Learning Computer Studies Through
+<span class="text-gold">Localized Analogies</span>
+</h2>
+
+<p class="max-w-3xl mx-auto mt-8 text-silver text-lg">
+CodeLokal is a research project that investigates how local language,
+cultural examples and familiar community experiences can improve
+students' understanding of Computer Studies concepts.
+</p>
+
+<div class="mt-10">
+<a href="#register"
+class="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition">
+Begin Experiment
+</a>
+</div>
+
+</section>
+
+<!-- ABOUT -->
+
+<section id="about" class="max-w-6xl mx-auto px-6 py-20">
+
+<div class="grid md:grid-cols-2 gap-12 items-center">
+
+<div>
+
+<h3 class="text-4xl font-bold mb-6">
+About CodeLokal
+</h3>
+
+<p class="text-silver leading-relaxed mb-4">
+Many students struggle to understand abstract computing concepts because
+the explanations often use unfamiliar examples and technical terms.
+</p>
+
+<p class="text-silver leading-relaxed">
+This project explores whether localized analogies can improve learning,
+engagement and retention among secondary school students.
+</p>
+
+</div>
+
+<div class="bg-white/5 border border-gold/20 p-8 rounded-3xl">
+
+<h4 class="text-gold font-bold text-xl mb-4">
+Research Question
+</h4>
+
+<p class="text-silver">
+Can localized analogy-based learning improve students'
+understanding of Computer Studies concepts compared to
+traditional English-based instruction?
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- HOW IT WORKS -->
+
+<section id="how" class="bg-white/5 py-20">
+
+<div class="max-w-6xl mx-auto px-6">
+
+<h3 class="text-4xl font-bold text-center mb-16">
+How It Works
+</h3>
+
+<div class="grid md:grid-cols-4 gap-8 text-center">
+
+<div class="p-6">
+<div class="text-gold text-5xl font-bold">1</div>
+<h4 class="font-bold mt-4">Register</h4>
+<p class="text-silver text-sm mt-2">
+Enter your name and school.
+</p>
+</div>
+
+<div class="p-6">
+<div class="text-gold text-5xl font-bold">2</div>
+<h4 class="font-bold mt-4">Choose Method</h4>
+<p class="text-silver text-sm mt-2">
+English or Localized Learning.
+</p>
+</div>
+
+<div class="p-6">
+<div class="text-gold text-5xl font-bold">3</div>
+<h4 class="font-bold mt-4">Study & Quiz</h4>
+<p class="text-silver text-sm mt-2">
+Learn and test your understanding.
+</p>
+</div>
+
+<div class="p-6">
+<div class="text-gold text-5xl font-bold">4</div>
+<h4 class="font-bold mt-4">Questionnaire</h4>
+<p class="text-silver text-sm mt-2">
+Provide feedback for research.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- RESEARCH GOAL -->
+
+<section id="goal" class="max-w-6xl mx-auto px-6 py-20 text-center">
+
+<h3 class="text-4xl font-bold mb-8">
+Research Goal
+</h3>
+
+<p class="max-w-3xl mx-auto text-silver leading-relaxed text-lg">
+To determine whether localized analogy-based learning improves
+understanding, retention and engagement in Computer Studies
+among secondary school students in Ado-Ekiti.
+</p>
+
+</section>
+
+<!-- REGISTRATION -->
+
+<section id="register" class="max-w-4xl mx-auto px-6 py-20">
+
+<div class="bg-white/5 border border-gold/20 rounded-3xl p-10">
+
+<h2 class="text-4xl font-bold text-center mb-4">
+Student Registration
+</h2>
+
+<p class="text-center text-silver mb-8">
+Please enter your details before participating in the study.
+</p>
+
+<form id="regForm">
+
+<input
+id="name"
+type="text"
+placeholder="Full Name"
+required
+class="w-full p-4 rounded-xl bg-black/40 border border-white/10 text-white outline-none focus:border-gold">
+
+<input
+id="school"
+type="text"
+placeholder="School Name"
+required
+class="w-full p-4 rounded-xl bg-black/40 border border-white/10 text-white outline-none focus:border-gold">
+
+<button type="submit"
+class="w-full bg-gold text-black font-bold py-4 rounded-xl hover:bg-white transition">
+Start Learning
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="border-t border-white/10">
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+
+<div class="grid md:grid-cols-3 gap-8">
+
+<div>
+<a href="#">
+<h1 class="text-2xl font-extrabold">
+CODE<span class="text-gold">LOKAL</span>
+</h1>
+</a>
+
+<p class="text-silver text-sm">
+Localized Analogy-Based Learning for Computer Studies.
+</p>
+</div>
+
+<div>
+<h3 class="font-bold text-white mb-3">
+Navigation
+</h3>
+
+<ul class="space-y-2 text-silver">
+<li><a href="#about">About</a></li>
+<li><a href="#how">How It Works</a></li>
+<li><a href="#goal">Research Goal</a></li>
+<li><a href="#register">Register</a></li>
+</ul>
+</div>
+
+<div>
+<h3 class="font-bold text-white mb-3">
+Research Project
+</h3>
+
+<p class="text-silver text-sm">
+Final Year Project on Localized Learning in Ado-Ekiti.
+</p>
+</div>
+
+</div>
+
+<div class="text-center text-silver text-sm mt-10">
+© 2026 CodeLokal Research Project
+</div>
+
+</div>
+
+</footer>
+   <script>
+function openAdmin() {
+    const key = prompt("Enter Admin Passkey:");
+
+    if (!key) return;
+
+    if (key === "codelokal2026") {
+        sessionStorage.setItem("adminAccess", "true");
+        window.location.href = "admin.html";
+    } else {
+        alert("Incorrect passkey!");
+    }
+}
+
+document.getElementById("regForm").addEventListener("submit", function(event){
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const school = document.getElementById("school").value.trim();
+
+    if(!name || !school){
+        alert("Please fill all fields");
+        return;
+    }
+
+    const student = {
+        id: Date.now(),
+        name,
+        school,
+        method: null
+    };
+
+    localStorage.setItem("student", JSON.stringify(student));
+
+    // Save to participants list
+    let participants =
+        JSON.parse(localStorage.getItem("participants")) || [];
+
+    const exists = participants.some(
+        p => p.name === name && p.school === school
+    );
+
+    if (!exists) {
+        participants.push(student);
+        localStorage.setItem(
+            "participants",
+            JSON.stringify(participants)
+        );
+    }
+
+    window.location.href = "choose-learning.html";
+});
+</script>  
+ </body>
+</html>
+
+<script>
+function openAdmin() {
+    const key = prompt("Enter Admin Passkey:");
+
+    if (!key) return;
+
+    if (key === "codelokal2026") {
+        sessionStorage.setItem("adminAccess", "true");
+        window.location.href = "admin.html";
+    } else {
+        alert("Incorrect passkey!");
+    }
+}
+
+    const exists = participants.some(
+        p => p.name === name && p.school === school
+    );
+
+    if (!exists) {
+        participants.push(student);
+        localStorage.setItem(
+            "participants",
+            JSON.stringify(participants)
+        );
+    }
+
+    // go to next page
+    window.location.href = "choose-learning.html";
+
+   

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lesson | CodeLokal</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+gold: "#FFD700",
+dark: "#0A0A0A",
+silver: "#94A3B8"
+}
+}
+}
+}
+</script>
+
+</head>
+
+<body class="bg-dark text-white min-h-screen">
+
+<!-- NAVBAR -->
+<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10">
+
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+<a href="index.html">
+<h1 class="text-2xl font-extrabold">
+CODE<span class="text-gold">LOKAL</span>
+</h1>
+</a>
+
+<div class="hidden md:flex gap-8">
+
+<a href="index.html">Home</a>
+
+<a href="choose-learning.html">
+Dashboard
+</a>
+
+<a href="lesson.html" class="text-gold">
+Lesson
+</a>
+
+<a href="quiz.html">
+Quiz
+</a>
+
+<a href="questionnaire.html">
+Questionnaire
+</a>
+
+</div>
+
+<div id="methodDisplay"
+class="bg-gold text-black px-4 py-2 rounded-full font-bold">
+Loading...
+</div>
+
+</div>
+
+</nav>
+
+
+<section class="max-w-5xl mx-auto px-6 py-16">
+
+<h2 class="text-4xl md:text-5xl font-extrabold text-center mb-8">
+Computer Studies Lesson
+</h2>
+
+<!-- Student Card -->
+
+<div class="bg-white/5 border border-gold/20 rounded-2xl p-6 mb-8">
+
+<div class="grid md:grid-cols-2 gap-4">
+
+<div>
+<p class="text-silver text-sm">Student Name</p>
+<h3 id="studentName" class="font-bold text-xl">
+Loading...
+</h3>
+</div>
+
+<div>
+<p class="text-silver text-sm">School</p>
+<h3 id="studentSchool" class="font-bold text-xl">
+Loading...
+</h3>
+</div>
+
+</div>
+
+</div>
+
+<!-- Lesson Content -->
+
+<div class="bg-white/5 border border-white/10 rounded-3xl p-8">
+
+<div id="lessonContent">
+Loading lesson...
+</div>
+
+</div>
+
+<div class="text-center mt-10">
+
+<button
+onclick="goToQuiz()"
+class="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition">
+Take Quiz →
+</button>
+
+</div>
+
+</section>
+
+<script>
+
+    const student =
+JSON.parse(localStorage.getItem("student"));
+
+if(student){
+
+document.getElementById("studentName").textContent =
+student.name;
+
+document.getElementById("studentSchool").textContent =
+student.school;
+
+}
+
+
+
+const method = localStorage.getItem("learningMethod");
+if(!method){
+
+alert("Please select a learning method first.");
+
+window.location.href = "choose-learning.html";
+
+}
+
+
+const lessonContent = document.getElementById("lessonContent");
+const methodDisplay = document.getElementById("methodDisplay");
+
+if(method === "localized"){
+
+methodDisplay.innerHTML = "Localized Learning";
+
+lessonContent.innerHTML = `
+
+<h3 class="text-2xl font-bold text-gold mb-6">
+Computer Studies Through Local Analogies
+</h3>
+
+<h4 class="text-xl font-bold mb-3">
+1. What is a Computer?
+</h4>
+
+<p class="text-silver mb-6">
+Think of a computer like a hardworking assistant in Oja Oba Market.
+When you give it instructions, it performs tasks quickly and accurately.
+Just as a trader records sales and calculates profit, a computer processes information.
+</p>
+
+<h4 class="text-xl font-bold mb-3">
+2. Variables
+</h4>
+
+<p class="text-silver mb-6">
+Imagine a basket used by a market woman.
+Today it contains tomatoes, tomorrow it contains pepper.
+The basket remains the same but the contents change.
+A variable works exactly like that basket.
+</p>
+
+<h4 class="text-xl font-bold mb-3">
+3. Algorithms
+</h4>
+
+<p class="text-silver mb-6">
+An algorithm is like the steps followed when preparing pounded yam:
+
+1. Boil the yam.
+2. Pound it.
+3. Serve it.
+
+Following the steps correctly produces the expected result.
+</p>
+
+<h4 class="text-xl font-bold mb-3">
+4. Flowcharts
+</h4>
+
+<p class="text-silver mb-6">
+A flowchart is like drawing a map showing the route from your house to school.
+It visually shows the order of actions to follow.
+</p>
+
+<div class="bg-black/40 p-6 rounded-xl">
+<h4 class="font-bold text-gold mb-3">
+Key Takeaway
+</h4>
+
+Computers solve problems, variables store information,
+algorithms provide steps, and flowcharts visually represent those steps.
+</div>
+
+`;
+
+}
+else{
+
+methodDisplay.innerHTML = "English Learning";
+
+lessonContent.innerHTML = `
+
+<h3 class="text-2xl font-bold text-gold mb-6">
+Introduction to Computer Studies
+</h3>
+
+<h4 class="text-xl font-bold mb-3">
+1. Computer Fundamentals
+</h4>
+
+<p class="text-silver mb-6">
+A computer is an electronic device that accepts data,
+processes it and produces useful information.
+</p>
+
+<h4 class="text-xl font-bold mb-3">
+2. Variables
+</h4>
+
+<p class="text-silver mb-6">
+A variable is a named storage location used to hold data.
+The value stored can change during execution.
+</p>
+
+<h4 class="text-xl font-bold mb-3">
+3. Algorithms
+</h4>
+
+<p class="text-silver mb-6">
+An algorithm is a sequence of instructions used to solve a problem
+or perform a task.
+</p>
+
+<h4 class="text-xl font-bold mb-6">
+4. Flowcharts
+</h4>
+
+<p class="text-silver mb-6">
+A flowchart is a graphical representation of a process,
+showing the sequence of steps required to complete a task.
+</p>
+
+<div class="bg-black/40 p-6 rounded-xl">
+<h4 class="font-bold text-gold mb-3">
+Key Takeaway
+</h4>
+
+Computers process data, variables store values,
+algorithms define procedures, and flowcharts visualize processes.
+</div>
+
+`;
+}
+
+function goToQuiz(){
+window.location.href = "quiz.html";
+}
+
+</script>
+
+
+<!-- FOOTER -->
+
+<footer class="border-t border-white/10">
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+
+<div class="grid md:grid-cols-3 gap-8">
+
+<div>
+<h3 class="font-bold text-white mb-3">
+CodeLokal
+</h3>
+
+<p class="text-silver text-sm">
+Localized Analogy-Based Learning for Computer Studies.
+</p>
+</div>
+
+<div>
+<h3 class="font-bold text-white mb-3">
+Navigation
+</h3>
+
+<ul class="space-y-2 text-silver">
+<li><a href="index.html">Home</a></li>
+<li><a href="choose-learning.html">Dashboard</a></li>
+<li><a href="lesson.html">Lesson</a></li>
+<li><a href="quiz.html">Quiz</a></li>
+<li><a href="questionnaire.html">Questionnaire</a></li>
+</ul>
+</div>
+
+<div>
+<h3 class="font-bold text-white mb-3">
+Research Project
+</h3>
+
+<p class="text-silver text-sm">
+Final Year Project on Localized Learning in Ado-Ekiti.
+</p>
+</div>
+
+</div>
+
+<div class="text-center text-silver text-sm mt-10">
+© 2026 CodeLokal Research Project
+</div>
+
+</div>
+
+</footer>
+
+
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+gold: "#FFD700",
+dark: "#0A0A0A",
+silver: "#94A3B8"
+}
+}
+}
+}
+</script>
+</head>
+
+<body class="bg-dark text-white min-h-screen">
+
+<!-- AUTH -->
+<script>
+if(sessionStorage.getItem("adminAccess") !== "true"){
+window.location.href="index.html";
+}
+</script>
+
+<!-- HEADER -->
+<header class="border-b border-silver/20 bg-black/60 backdrop-blur">
+<div class="max-w-6xl mx-auto p-6 flex justify-between items-center">
+    <a href="#">
+<h1 class="text-2xl font-extrabold">
+CODE<span class="text-gold">LOKAL</span>
+</h1>
+</a>
+
+<div class="flex gap-3">
+<input id="search" placeholder="Search user..." 
+class="px-3 py-2 rounded bg-black border border-silver/30 text-white">
+
+<button onclick="exportCSV()" class="px-4 py-2 bg-gold text-black font-bold rounded">
+Export CSV
+</button>
+
+<button onclick="clearFeedback()"
+class="px-4 py-2 bg-red-600 text-white font-bold rounded">
+Clear Feedback
+</button>
+
+<button onclick="clearAllUsers()"
+class="px-4 py-2 bg-red-800 text-white font-bold rounded">
+Clear Records
+</button>
+
+</div>
+</div>
+</header>
+
+<!--DASHBOARD-->
+<h1 class="text-2xl font-bold text-gold max-w-6xl mx-auto p-6 grid md:grid-cols-3">Admin Dashboard</h1>
+
+<!-- STATS -->
+<section class="max-w-6xl mx-auto p-6 grid md:grid-cols-3 gap-6">
+
+<div class="bg-black border border-silver/20 p-5 rounded-xl">
+<p class="text-silver">Total Users</p>
+<h2 id="students" class="text-3xl font-bold">0</h2>
+</div>
+
+<div class="bg-black border border-silver/20 p-5 rounded-xl">
+<p class="text-silver">Feedback</p>
+<h2 id="feedback" class="text-3xl font-bold text-gold">0</h2>
+</div>
+
+<div class="bg-black border border-silver/20 p-5 rounded-xl">
+<p class="text-silver">Records</p>
+<h2 id="records" class="text-3xl font-bold">0</h2>
+</div>
+
+</section>
+
+<!-- TABLE -->
+<section class="max-w-6xl mx-auto p-6">
+
+<div class="overflow-x-auto bg-black border border-silver/20 rounded-xl">
+
+<table class="w-full text-sm">
+<thead class="bg-black text-silver border-b border-silver/20">
+<tr>
+<th class="p-3">Name</th>
+<th class="p-3">School</th>
+<th class="p-3">Score</th>
+<th class="p-3">Actions</th>
+</tr>
+</thead>
+
+<tbody id="table"></tbody>
+</table>
+
+</div>
+
+</section>
+
+<!-- MODAL -->
+<div id="modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center">
+<div class="bg-black border border-silver/30 p-6 rounded-xl w-[90%] max-w-xl">
+<h2 class="text-gold text-xl font-bold mb-3">User Details</h2>
+<pre id="details" class="text-silver whitespace-pre-wrap"></pre>
+
+<button onclick="closeModal()" class="mt-4 px-4 py-2 bg-gold text-black font-bold rounded">
+Close
+</button>
+</div>
+</div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("quizStats")) || [];
+let feedback = JSON.parse(localStorage.getItem("feedback")) || [];
+
+updateStats();
+
+function updateStats(){
+    document.getElementById("students").innerText = data.length;
+    document.getElementById("records").innerText = data.length;
+    document.getElementById("feedback").innerText = feedback.length;
+}
+
+function render(list){
+    let table = document.getElementById("table");
+    table.innerHTML = "";
+
+    if(list.length === 0){
+        table.innerHTML = `
+        <tr>
+            <td colspan="4" class="p-6 text-center text-silver">
+                No records found
+            </td>
+        </tr>`;
+        return;
+    }
+
+    list.forEach((u,index)=>{
+
+        table.innerHTML += `
+        <tr class="border-b border-silver/10 hover:bg-silver/10">
+            <td class="p-3">${u.name || "-"}</td>
+            <td class="p-3 text-silver">${u.school || "-"}</td>
+            <td class="p-3 text-gold">${u.score || 0}</td>
+
+            <td class="p-3 flex gap-2">
+                <button onclick="view(${index})"
+                class="px-3 py-1 bg-silver/20 rounded">
+                View
+                </button>
+
+                <button onclick="del(${index})"
+                class="px-3 py-1 bg-red-500 rounded">
+                Delete
+                </button>
+            </td>
+        </tr>
+        `;
+    });
+}
+
+render(data);
+
+document.getElementById("search").addEventListener("input", function(){
+
+    let val = this.value.toLowerCase();
+
+    let filtered = data.filter(u =>
+        (u.name || "").toLowerCase().includes(val) ||
+        (u.school || "").toLowerCase().includes(val)
+    );
+
+    render(filtered);
+
+});
+
+// VIEW USER
+function view(i){
+
+    let u = data[i];
+
+    let details = `
+Name: ${u.name || "-"}
+
+School: ${u.school || "-"}
+
+Learning Method: ${u.method || "-"}
+
+Score: ${u.score || 0}
+
+Questionnaire Answers:
+${JSON.stringify(u, null, 2)}
+`;
+
+    document.getElementById("details").innerText = details;
+
+    document.getElementById("modal").classList.remove("hidden");
+}
+
+function closeModal(){
+    document.getElementById("modal").classList.add("hidden");
+}
+
+// DELETE USER
+function del(i){
+
+    if(confirm("Delete this record?")){
+
+        data.splice(i,1);
+
+        localStorage.setItem(
+            "quizStats",
+            JSON.stringify(data)
+        );
+
+        updateStats();
+        render(data);
+    }
+}
+
+// CLEAR ALL USERS
+function clearAllUsers(){
+
+    if(confirm("Delete ALL student records?")){
+
+        data = [];
+
+        localStorage.setItem(
+            "quizStats",
+            JSON.stringify([])
+        );
+
+        updateStats();
+        render(data);
+    }
+}
+
+// CLEAR FEEDBACK
+function clearFeedback(){
+
+    if(confirm("Delete ALL feedback records?")){
+
+        feedback = [];
+
+        localStorage.setItem(
+            "feedback",
+            JSON.stringify([])
+        );
+
+        document.getElementById("feedback").innerText = "0";
+
+        alert("Feedback records cleared successfully.");
+    }
+}
+
+// EXPORT CSV
+function exportCSV(){
+
+    let csv = "Name,School,Method,Score\n";
+
+    data.forEach(u => {
+
+        csv += `"${u.name || ""}","${u.school || ""}","${u.method || ""}","${u.score || 0}"\n`;
+
+    });
+
+    let blob = new Blob([csv], {
+        type: "text/csv"
+    });
+
+    let url = URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+
+    a.href = url;
+    a.download = "users.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+</script>
+
+</body>
+</html>
