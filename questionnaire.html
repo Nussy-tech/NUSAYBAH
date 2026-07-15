@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionnaire | CodeLokal</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+gold: "#FFD700",
+dark: "#0A0A0A",
+silver: "#94A3B8"
+}
+}
+}
+}
+</script>
+</head>
+
+<body class="bg-dark text-white min-h-screen">
+
+<!-- NAV -->
+<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10">
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+<a href="index.html" class="text-xl font-bold">
+CODE<span class="text-gold">LOKAL</span>
+</a>
+
+<div class="flex gap-6 text-sm">
+<a href="index.html">Home</a>
+<a href="choose-learning.html">Dashboard</a>
+<a href="lesson.html">Lesson</a>
+<a href="quiz.html">Quiz</a>
+<a href="questionnaire.html" class="text-gold">Questionnaire</a>
+</div>
+
+</div>
+</nav>
+
+<!-- HEADER -->
+<section class="max-w-4xl mx-auto px-6 py-10">
+
+<h2 class="text-4xl font-extrabold text-center mb-3">
+Feedback Questionnaire
+</h2>
+
+<p class="text-silver text-center mb-8">
+Your responses will be used for academic research analysis
+</p>
+
+<!-- SCALE EXPLANATION -->
+<div class="bg-white/5 border border-gold/20 p-6 rounded-xl mb-8">
+
+<h3 class="text-xl font-bold mb-3 text-gold">
+How to Answer (Scale Guide)
+</h3>
+
+<ul class="text-silver space-y-2 text-sm">
+<li>1 — Strongly Disagree</li>
+<li>2 — Disagree</li>
+<li>3 — Neutral (Not sure)</li>
+<li>4 — Agree</li>
+<li>5 — Strongly Agree</li>
+</ul>
+
+</div>
+
+<!-- STUDENT INFO -->
+<div class="bg-white/5 border border-white/10 p-6 rounded-xl mb-6">
+
+<h3 class="text-lg font-bold mb-4">Your Information</h3>
+
+<div class="grid md:grid-cols-2 gap-4">
+
+<input id="age" type="number" placeholder="Age"
+class="p-3 rounded-xl bg-black/40 border border-white/10">
+
+<select id="gender"
+class="p-3 rounded-xl bg-black/40 border border-white/10 text-white">
+
+<option value="">Select Gender</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+
+</select>
+
+</div>
+
+</div>
+
+<!-- STUDENT FROM REGISTRATION -->
+<div id="studentBox" class="bg-white/5 border border-gold/20 p-4 rounded-xl mb-8">
+Loading student...
+</div>
+
+<!-- FORM -->
+<form id="form" class="space-y-6"></form>
+
+<div class="text-center mt-8">
+<button onclick="submitForm()"
+class="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white">
+Submit Feedback
+</button>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="hidden mt-10 p-6 bg-white/5 border border-white/10 rounded-xl"></div>
+
+</section>
+
+<script>
+
+// STUDENT DATA
+const student = JSON.parse(localStorage.getItem("student"));
+
+if(student){
+document.getElementById("studentBox").innerHTML = `
+<p><b>Name:</b> ${student.name}</p>
+<p><b>School:</b> ${student.school}</p>
+<p><b>Method:</b> ${student.method}</p>
+`;
+}
+
+// QUESTIONS
+const questions = [
+"The lesson was easy to understand",
+"The examples helped my understanding",
+"I prefer this learning method",
+"The lesson was engaging",
+"I would recommend this method to others"
+];
+
+// RENDER QUESTIONS
+const form = document.getElementById("form");
+
+questions.forEach((q, i) => {
+
+const div = document.createElement("div");
+div.className = "bg-white/5 p-5 rounded-xl border border-white/10";
+
+div.innerHTML = `
+<p class="font-bold mb-3">${i+1}. ${q}</p>
+
+<div class="flex justify-between text-sm text-silver">
+<label><input type="radio" name="q${i}" value="1"> 1</label>
+<label><input type="radio" name="q${i}" value="2"> 2</label>
+<label><input type="radio" name="q${i}" value="3"> 3</label>
+<label><input type="radio" name="q${i}" value="4"> 4</label>
+<label><input type="radio" name="q${i}" value="5"> 5</label>
+</div>
+`;
+
+form.appendChild(div);
+});
+
+// SUBMIT
+function submitForm(){
+
+let responses = [];
+let total = 0;
+
+const gender = document.getElementById("gender").value;
+const age = document.getElementById("age").value;
+
+questions.forEach((q, i) => {
+
+let selected =
+document.querySelector(`input[name="q${i}"]:checked`);
+
+let value = selected ? parseInt(selected.value) : 0;
+
+responses.push(value);
+total += value;
+
+});
+
+// GET STUDENT DATA
+const student = JSON.parse(localStorage.getItem("student"));
+
+// GET EXISTING FEEDBACK
+let feedback = JSON.parse(localStorage.getItem("feedback")) || [];
+
+// SAVE NEW ENTRY (IMPORTANT FORMAT FOR ADMIN DASHBOARD)
+feedback.push({
+name: student?.name || "Unknown",
+school: student?.school || "Unknown",
+method: student?.method || "unknown",
+
+age: age,
+gender: gender,
+
+responses: responses,
+score: total,
+
+time: new Date().toLocaleString()
+});
+
+// STORE BACK
+localStorage.setItem("feedback", JSON.stringify(feedback));
+
+// CONFIRMATION UI
+document.getElementById("result").innerHTML = `
+<h3 class="text-xl font-bold mb-2 text-gold">Feedback Submitted Successfully!</h3>
+<p class="text-silver">Your responses have been saved for analysis.</p>
+
+<div class="mt-6">
+<a href="admin.html"
+class="inline-block bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-gold transition">
+Go to Admin Dashboard
+</a>
+</div>
+`;
+
+document.getElementById("result").classList.remove("hidden");
+
+}
+
+// SAVE DATA
+let feedback = JSON.parse(localStorage.getItem("feedback")) || [];
+
+feedback.push({
+name: student?.name,
+school: student?.school,
+method: student?.method,
+age: age,
+gender: gender,
+responses: responses,
+score: total,
+time: new Date().toLocaleString()
+});
+
+localStorage.setItem("feedback", JSON.stringify(feedback));
+
+// RESULT
+document.getElementById("result").innerHTML = `
+<h3 class="text-xl font-bold mb-2">Thank you for your feedback!</h3>
+<p>Total Score: ${total}</p>
+`;
+
+document.getElementById("result").classList.remove("hidden");
+
+</script>
+
+</body>
+</html>
