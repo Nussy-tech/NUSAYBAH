@@ -1,0 +1,25 @@
+{
+  "name": "codelokal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nussy-tech/NUSAYBAH.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Nussy-tech/NUSAYBAH/issues"
+  },
+  "homepage": "https://github.com/Nussy-tech/NUSAYBAH#readme",
+  "dependencies": {
+    "sqlite3": "^6.0.1"
+  }
+}

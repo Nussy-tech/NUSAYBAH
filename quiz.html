@@ -1,136 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz | CodeLokal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz | CodeLokal</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<script>
-tailwind.config = {
-theme: {
-extend: {
-colors: {
-gold: "#FFD700",
-dark: "#0A0A0A",
-silver: "#94A3B8"
-}
-}
-}
-}
-</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: "#FFD700",
+                        dark: "#0A0A0A",
+                        silver: "#94A3B8"
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
 <body class="bg-dark text-white min-h-screen">
 
-<nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10">
-<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-<a href="index.html" class="font-bold text-xl">CODE<span class="text-gold">LOKAL</span></a>
-</div>
-</nav>
+    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-xl">CODE<span class="text-gold">LOKAL</span></a>
+        </div>
+    </nav>
 
-<section class="max-w-4xl mx-auto px-6 py-10">
+    <section class="max-w-4xl mx-auto px-6 py-10">
+        <h2 class="text-4xl font-bold text-center mb-2">Computer Studies Quiz</h2>
 
-<h2 class="text-4xl font-bold text-center mb-2">Computer Studies Quiz</h2>
+        <div class="text-center mb-6 text-gold font-bold">
+            Time Left: <span id="timer">2:00</span>
+        </div>
 
-<div class="text-center mb-6 text-gold font-bold">
-Time Left: <span id="timer">2:00</span>
-</div>
+        <div id="studentBox" class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10"></div>
 
-<div id="studentBox" class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10"></div>
+        <form id="quizForm" class="space-y-6"></form>
 
-<form id="quizForm" class="space-y-6"></form>
+        <div class="text-center mt-8">
+            <!-- Removed onclick, added event listener in the JS below -->
+            <button id="submitBtn" class="bg-gold text-black px-8 py-4 rounded-full font-bold hover:bg-white transition">
+                Submit Quiz
+            </button>
+        </div>
 
-<div class="text-center mt-8">
-<button id="submitBtn" onclick="submitQuiz()"
-class="bg-gold text-black px-8 py-4 rounded-full font-bold">
-Submit Quiz
-</button>
-</div>
+        <div id="results" class="hidden mt-10 p-6 bg-white/5 rounded-xl border border-white/10 text-center"></div>
 
-<div id="results" class="hidden mt-10 p-6 bg-white/5 rounded-xl border border-white/10"></div>
+    </section>
 
-</section>
+    <!-- Changed to type="module" and imported Firebase -->
+    <script type="module">
+        import { db } from "./firebase.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-<script>
+        // Pull student data from registration
+        const student = JSON.parse(localStorage.getItem("student"));
 
-const student = JSON.parse(localStorage.getItem("student"));
+        if (!student) {
+            alert("Please register first");
+            window.location.href = "index.html";
+        }
 
-if(!student){
-alert("Please register first");
-window.location.href = "index.html";
-}
+        document.getElementById("studentBox").innerHTML = `
+            <p><b>Name:</b> ${student.name}</p>
+            <p><b>School:</b> ${student.school}</p>
+            <p><b>Method:</b> ${student.method || "Not selected"}</p>
+        `;
 
-document.getElementById("studentBox").innerHTML = `
-<p><b>Name:</b> ${student.name}</p>
-<p><b>School:</b> ${student.school}</p>
-<p><b>Method:</b> ${student.method}</p>
-`;
+        let questions = [
+            {q:"What is a variable?", options:["Storage","Virus","Screen","Mouse"], answer:0},
+            {q:"CPU stands for?", options:["Central Processing Unit","Control Program","Computer Power","None"], answer:0},
+            {q:"Algorithm is?", options:["Steps","Virus","Game","Hardware"], answer:0},
+            {q:"Flowchart is?", options:["Diagram","Code","Mouse","Screen"], answer:0},
+            {q:"RAM is?", options:["Memory","Printer","Disk","CPU"], answer:0}
+        ];
 
-let questions = [
-{q:"What is a variable?", options:["Storage","Virus","Screen","Mouse"], answer:0},
-{q:"CPU stands for?", options:["Central Processing Unit","Control Program","Computer Power","None"], answer:0},
-{q:"Algorithm is?", options:["Steps","Virus","Game","Hardware"], answer:0},
-{q:"Flowchart is?", options:["Diagram","Code","Mouse","Screen"], answer:0},
-{q:"RAM is?", options:["Memory","Printer","Disk","CPU"], answer:0}
-];
+        // Render Questions
+        questions.forEach((q, i) => {
+            const div = document.createElement("div");
+            div.className = "p-4 bg-white/5 rounded-xl border border-white/10";
+            div.innerHTML = `<p class="font-bold">${i + 1}. ${q.q}</p>` +
+                q.options.map((o, j) =>
+                    `<label class="block mt-2 cursor-pointer"><input type="radio" name="q${i}" value="${j}" class="accent-gold"> ${o}</label>`
+                ).join("");
+            document.getElementById("quizForm").appendChild(div);
+        });
 
-questions.forEach((q,i)=>{
-const div = document.createElement("div");
-div.className="p-4 bg-white/5 rounded-xl border border-white/10";
-div.innerHTML = `<p class="font-bold">${i+1}. ${q.q}</p>`+
-q.options.map((o,j)=>
-`<label class="block mt-2"><input type="radio" name="q${i}" value="${j}"> ${o}</label>`
-).join("");
-document.getElementById("quizForm").appendChild(div);
-});
+        // Timer Logic
+        let time = 120;
+        let timerInterval = setInterval(() => {
+            let m = Math.floor(time / 60);
+            let s = time % 60;
+            document.getElementById("timer").innerText = `${m}:${s < 10 ? "0" : ""}${s}`;
+            time--;
+            
+            if (time < 0) {
+                submitQuiz();
+            }
+        }, 1000);
 
-let time = 120;
+        // Submit Logic
+        async function submitQuiz() {
+            if (window.submitted) return;
+            window.submitted = true;
 
-setInterval(()=>{
-let m = Math.floor(time/60);
-let s = time%60;
-document.getElementById("timer").innerText = `${m}:${s<10?"0":""}${s}`;
-time--;
-if(time<0) submitQuiz();
-},1000);
+            clearInterval(timerInterval); // Stop the timer
+            
+            const btn = document.getElementById("submitBtn");
+            btn.disabled = true;
+            btn.innerText = "Submitting...";
 
-function submitQuiz(){
+            let score = 0;
 
-if(window.submitted) return;
-window.submitted = true;
+            questions.forEach((q, i) => {
+                let selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && parseInt(selected.value) === q.answer) {
+                    score++;
+                }
+            });
 
-document.getElementById("submitBtn").disabled = true;
+            const quizPayload = {
+                name: student.name,
+                school: student.school,
+                method: student.method || "Unknown",
+                score: score,
+                totalQuestions: questions.length,
+                timestamp: new Date().toISOString()
+            };
 
-let score = 0;
+            try {
+                // Send to your Firebase Firestore database
+                await addDoc(collection(db, "quizResults"), quizPayload);
 
-questions.forEach((q,i)=>{
-let selected = document.querySelector(`input[name="q${i}"]:checked`);
-if(selected && parseInt(selected.value) === q.answer){
-score++;
-}
-});
+                // Hide button and show results
+                btn.style.display = "none";
+                const resultsDiv = document.getElementById("results");
+                resultsDiv.classList.remove("hidden");
+                resultsDiv.innerHTML = `
+                    <h3 class="text-3xl font-bold text-gold mb-2">Quiz Complete!</h3>
+                    <p class="text-xl mb-4">You scored: <b>${score}/${questions.length}</b></p>
+                    <a href="questionnaire.html" class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-gold transition inline-block">
+                        Continue to Questionnaire →
+                    </a>
+                `;
 
-let stats = JSON.parse(localStorage.getItem("quizStats")) || [];
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                alert("Failed to save quiz results. Please check your connection.");
+                btn.disabled = false;
+                btn.innerText = "Try Again";
+                window.submitted = false;
+            }
+        }
 
-stats.push({
-name: student.name,
-school: student.school,
-method: student.method,
-score: score,
-time: new Date().toLocaleString()
-});
+        // Attach event listener to the button
+        document.getElementById("submitBtn").addEventListener("click", submitQuiz);
 
-localStorage.setItem("quizStats", JSON.stringify(stats));
-
-document.getElementById("results").classList.remove("hidden");
-document.getElementById("results").innerHTML =
-`<h3 class="text-2xl font-bold">Score: ${score}/${questions.length}</h3>
-<a href="questionnaire.html" class="text-gold mt-4 inline-block">Continue →</a>`;
-}
-
-</script>
+    </script>
 
 </body>
 </html>

@@ -7,6 +7,7 @@
 <title>Student Registration | CodeLokal</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="api.js"></script>
 
 <script>
 tailwind.config = {
@@ -55,11 +56,11 @@ Start Experiment
 
 <script>
 
-function saveStudent(e){
+async function saveStudent(e){
 e.preventDefault();
 
-const name = document.getElementById("name").value;
-const school = document.getElementById("school").value;
+const name = document.getElementById("name").value.trim();
+const school = document.getElementById("school").value.trim();
 
 if(!name || !school){
 alert("Please fill all fields");
@@ -69,12 +70,20 @@ return;
 const student = {
 name,
 school,
-id: Date.now()
+id: Date.now(),
+createdAt: new Date().toISOString()
 };
 
 localStorage.setItem("student", JSON.stringify(student));
 
-// go to learning method page
+const apiResult = await sendToCodeLokalApi("/register", student);
+
+if (apiResult.ok) {
+console.log("Registration synced to API", apiResult.data);
+} else {
+console.warn("Registration stored locally only", apiResult.message);
+}
+
 window.location.href = "choose-learning.html";
 }
 

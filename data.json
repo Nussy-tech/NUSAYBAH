@@ -1,0 +1,66 @@
+{
+  "participants": [
+    {
+      "name": "Test User",
+      "school": "Demo School",
+      "id": 1,
+      "createdAt": "2026-07-15T00:00:00.000Z"
+    },
+    {
+      "name": "SQLite User",
+      "school": "SQLite School",
+      "id": 2,
+      "createdAt": "2026-07-15T00:00:00.000Z"
+    }
+  ],
+  "quizStats": [
+    {
+      "name": "Test User",
+      "school": "Demo School",
+      "method": "localized",
+      "score": 4,
+      "time": "2026-07-15T00:00:00.000Z"
+    },
+    {
+      "name": "SQLite User",
+      "school": "SQLite School",
+      "method": "localized",
+      "score": 5,
+      "time": "2026-07-15T00:00:00.000Z"
+    }
+  ],
+  "feedback": [
+    {
+      "name": "Test User",
+      "school": "Demo School",
+      "method": "localized",
+      "age": 16,
+      "gender": "female",
+      "responses": [
+        4,
+        5,
+        4,
+        5,
+        4
+      ],
+      "score": 22,
+      "time": "2026-07-15T00:00:00.000Z"
+    },
+    {
+      "name": "SQLite User",
+      "school": "SQLite School",
+      "method": "localized",
+      "age": 17,
+      "gender": "male",
+      "responses": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "score": 25,
+      "time": "2026-07-15T00:00:00.000Z"
+    }
+  ]
+}
